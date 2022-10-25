@@ -1,0 +1,264 @@
+﻿
+
+<h1 style="text-align:center;">WELCOME TO DEVEXTREME WORLD..</h1>
+
+ 
+
+<div class="row">
+   <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title"> Chart #1</h5>
+        <p class="card-text">Some quick example text to build on the panel title and make up the bulk of the panel's content.</p>
+        @(Html.DevExtreme().Chart()
+            .ID("chart")
+            .Series(s => s
+            .Add()
+            .ArgumentField("Day")
+            .ValueField("Oranges")
+            .Name("My oranges")
+            .Type(SeriesType.Bar)
+            .Color("#ffaa66")
+            )
+            .DataSource(new[] {
+        new { Day = "Monday", Oranges = 3 },
+        new { Day = "Tuesday", Oranges = 2 },
+        new { Day = "Wednesday", Oranges = 3 },
+        new { Day = "Thursday", Oranges = 4 },
+        new { Day = "Friday", Oranges = 6 },
+        new { Day = "Saturday", Oranges = 11 },
+        new { Day = "Sunday", Oranges = 4 }
+            })
+            )
+      </div>
+    </div>
+   </div>
+  <div class="col-md-6">
+
+
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Chart #2</h5>
+        <p class="card-text">Report 2</p>
+        @(Html.DevExtreme().Chart()
+            .ID("chart2")
+            .CommonSeriesSettings(s => s
+            .ArgumentField("State")
+            .Type(SeriesType.Bar)
+            .HoverMode(ChartSeriesHoverMode.AllArgumentPoints)
+            .SelectionMode(ChartSeriesSelectionMode.AllArgumentPoints)
+            .Label(l => l
+            .Visible(true)
+            .Format(f => f
+            .Type(Format.FixedPoint)
+            .Precision(0)
+            )
+            )
+            )
+            .Series(s =>
+            {
+              s.Add().ValueField("Year2018").Name("2018");
+              s.Add().ValueField("Year2017").Name("2017");
+              s.Add().ValueField("Year2016").Name("2016");
+            })
+            .Title("Gross State Product within the Great Lakes Region")
+            .Legend(l => l
+            .VerticalAlignment(VerticalEdge.Bottom)
+            .HorizontalAlignment(HorizontalAlignment.Center)
+            )
+            .Export(e => e.Enabled(true))
+            .OnPointClick(@<text>
+              function(e) {
+              e.target.select();
+              }
+            </text>)
+            .DataSource(new[] {
+        new { State = "Illinois", Year2016 = 803, Year2017 = 823, Year2018 = 863 },
+        new { State = "Indiana", Year2016 = 316, Year2017 = 332, Year2018 = 332 },
+        new { State = "Michigan", Year2016 = 452, Year2017 = 459, Year2018 = 470 },
+        new { State = "Ohio", Year2016 = 621, Year2017 = 642, Year2018 = 675 },
+        new { State = "Wisconsin", Year2016 = 290, Year2017 = 294, Year2018 = 301 }
+            })
+            )
+      </div>
+    </div>
+
+
+
+
+ 
+  </div>
+
+
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Chart #3</h5>
+        <p class="card-text">Some quick example text to build on the panel title and make up the bulk of the panel's content.</p>
+        @(Html.DevExtreme().PieChart()
+            .ID("pie")
+            .Size(s => s.Width(500))
+            .Palette(VizPalette.Bright)
+            .Series(s => s
+            .Add()
+            .ArgumentField("Country")
+            .ValueField("Area")
+            .Label(l => l
+            .Visible(true)
+            .Connector(c => c
+            .Visible(true)
+            .Width(1)
+            )
+            )
+            )
+            .Title("Area of Countries")
+            .Export(e => e.Enabled(true))
+            .OnPointClick(@<text>
+              function (e) {
+              var point = e.target;
+              toggleVisibility(point);
+              }
+            </text>)
+            .OnLegendClick(@<text>
+              function (e) {
+              var arg = e.target;
+              toggleVisibility(this.getAllSeries()[0].getPointsByArg(arg)[0]);
+              }
+            </text>)
+            .DataSource(new[] {
+        new { Country = "Russia", Area = 12 },
+        new { Country = "Canada", Area = 7 },
+        new { Country = "USA", Area = 7 },
+        new { Country = "China", Area = 7 },
+        new { Country = "Brazil", Area = 6 },
+        new { Country = "Australia", Area = 5 },
+        new { Country = "India", Area = 2 },
+        new { Country = "Others", Area = 55 }
+            })
+            )
+
+        <script>
+          function toggleVisibility(item) {
+              if (item.isVisible()) {
+                  item.hide();
+              } else {
+                  item.show();
+              }
+          }
+        </script>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title"> Grid </h5>
+        @(Html.DevExtreme().DataGrid<SampleOrder>()
+            .ShowBorders(true)
+            .DataSource(d => d.Mvc().Controller("SampleData").LoadAction("Get").Key("OrderID"))
+            .Columns(columns =>
+            {
+              columns.AddFor(m => m.OrderID);
+              columns.AddFor(m => m.OrderDate);
+              columns.AddFor(m => m.CustomerName);
+              columns.AddFor(m => m.ShipCountry);
+              columns.AddFor(m => m.ShipCity);
+            })
+            .Paging(p => p.PageSize(10))
+            .FilterRow(f => f.Visible(true))
+            .HeaderFilter(f => f.Visible(true))
+            .GroupPanel(p => p.Visible(true))
+            .Grouping(g => g.AutoExpandAll(false))
+            .RemoteOperations(true)
+            .Summary(s => s
+            .TotalItems(totalItems =>
+            {
+              totalItems.AddFor(m => m.ShipCity).SummaryType(SummaryType.Count);
+            })
+            .GroupItems(groupItems =>
+            {
+              groupItems.Add().SummaryType(SummaryType.Count);
+            })
+            )
+            )
+     
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title"> Chart #4 </h5>
+        @(Html.DevExtreme().Chart()
+            .ID("chart4")
+            .Series(s =>
+            {
+              s.Add().ArgumentField("Country").ValueField("Val");
+            })
+            .ArgumentAxis(a => a
+            .Label(l => l
+            .OverlappingBehavior(OverlappingBehavior.Stagger)
+            .WordWrap(VizWordWrap.None)
+            )
+            )
+            .Legend(l => l
+            .Visible(false)
+            )
+            .DataSource(new[] {
+        new { Country = "China", Val = 1382500000 },
+        new { Country = "India", Val = 1314300000 },
+        new { Country = "United States", Val = 324789000 },
+        new { Country = "Indonesia", Val = 261600000 },
+        new { Country = "Brazil", Val = 207332000 },
+        new { Country = "Pakistan", Val = 196865000 },
+        new { Country = "Nigeria", Val = 188500000 },
+        new { Country = "Bangladesh", Val = 162240000 },
+        new { Country = "Russia", Val = 146400000 },
+        new { Country = "Japan", Val = 126760000 },
+        new { Country = "Mexico", Val = 122273000 },
+        new { Country = "Ethiopia", Val = 104345000 },
+        new { Country = "Philippines", Val = 103906000 },
+        new { Country = "Egypt", Val = 92847800 }
+            })
+            .Title("Population by Countries")
+            )
+
+        <div class="options">
+          <div class="caption">Options</div>
+          <div class="option">
+            <span>Overlapping Modes:</span>
+            @(Html.DevExtreme().SelectBox()
+                .DataSource(new[] {
+            OverlappingBehavior.Stagger,
+            OverlappingBehavior.Rotate,
+            OverlappingBehavior.Hide,
+            OverlappingBehavior.None
+                })
+                .Value(OverlappingBehavior.Stagger)
+                .OnValueChanged(@<text>
+                  function(e) {
+                  var chart = $("#chart").dxChart("instance");
+                  chart.option("argumentAxis.label.overlappingBehavior", e.value);
+                  }
+                </text>)
+                )
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+    </div>
+    </div>
